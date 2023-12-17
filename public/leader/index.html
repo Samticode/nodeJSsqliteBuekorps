@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leader</title>
+</head>
+<!-- ------------------------------------------------------------------------------------------------------------------------ -->
+<style>
+    /* ----------------Basic styles--------------------- */
+    * {
+        padding: 0;
+        margin: 0;
+        color: var(--black);
+    }
+
+    :root {
+        --black: #1c1c1c;
+        --brown: #4e4e56;
+        --green: #A0AFA0;
+        --white: #FDFDFD;
+        --beigh: #D9D9D9;
+        --red: #bd8989;
+        --gold: #B9AA8D;
+    }
+
+    body {
+        overflow: hidden;
+    }
+
+    /* ----------------Nav styles--------------------- */
+    nav {
+        width: 100%;
+        height: 15vh;
+        background-color: var(--brown);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    nav > h1 {     
+        color: var(--white);
+        font-size: 5rem;
+        margin-left: 3%;
+    }
+    nav > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 40%;
+    }
+    button {
+        width: 50%;
+        height: 10vh;
+        background-color: var(--gold);
+        margin-right: 3%;
+
+        font-size: 2rem;
+        color: var(--black);
+
+        border: none;
+        border-radius: 5vmax;
+    }
+    button:hover {
+        background-color: #90856e;
+    }
+
+    /* ----------------Main styles--------------------- */
+    .mainDisp {
+        width: 100%;
+        height: 85vh;
+        background-color: var(--beigh);
+        display: flex;
+    }
+
+    .company {
+        height: 100%;
+        width: 65%;
+        background-color: var(--white);
+
+        overflow-y: scroll;
+    }
+    .companyName {
+        color: var(--black);
+        font-size: 3rem;
+        margin: 1% 2%;
+    }
+
+    .peleton {
+        position: relative;
+        padding: 1%;
+        margin: 2% auto;
+        background-color: var(--green);
+        width: 96%;
+    }
+    .peletonName {
+        color: var(--black);
+        font-size: 2rem;
+        padding: 0 0 2% 0;
+    }
+
+    .deleteBTN {
+        position: absolute;
+        right: 0;
+        background-color: var(--red);
+        font-size: 1.5rem;
+        padding: 1%;
+        height: 50px;
+    }
+    .deleteBTN:hover {
+        background-color: #956b6b;
+    }
+
+    /* ----------------Edit/delete styles--------------------- */
+    .editDelete, .myInfodiv {
+        height: 100%;
+        width: 35%;
+    }
+
+    .editDeleteTitle {
+        font-size: 3rem;
+        text-align: center;
+        margin: 3% 0;
+    }
+
+    /* ----------------Create/assign styles--------------------- */
+    .createAssign{
+        height: 60vh;
+        width: 75vw;
+        background-color: #1c1c1c75;
+        border: 1px solid var(--white);
+        border-radius: 3vmax;
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 50;
+
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        place-items: center;
+    }
+
+    .addPeletonForm, .assignForm {
+        height: 80%;
+        width: 100%;
+    }
+
+    .title {
+        font-size: 3rem;
+        color: var(--white);
+        text-align: center;
+        margin-bottom: 5%;
+    }
+
+    .editForm {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .editForm > div > label{
+        color: var(--white);
+    }
+
+    /* ----------------Table styles--------------------- */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: var(--white);
+    }
+    table thead {
+        font-weight: bold;
+    }
+    td {
+        border: 1px solid var(--black);
+        font-size: 2rem;
+    }
+    tbody > tr:hover {
+        background-color: #cfcfcf;
+    }
+
+    .spacer {
+        height: 5px;
+        width: 100%;
+        background-color: var(--brown);
+        border-radius: 1vmax;
+    }
+
+    /* ----------------Form styles--------------------- */
+    form {
+        width: 100%;
+        height: 90%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+    label {
+        font-size: 2rem;
+    }
+    input {
+        font-size: 2rem;
+        
+    }
+    input[type=submit] {
+        width: 40%;
+        height: 10vh;
+
+        font-size: 2rem;
+        color: var(--black);
+
+        border: none;
+        border-radius: 5vmax;
+    }
+    input[name=editBTN] {
+        background-color: var(--green);
+    }
+    input[name=deleteBTN] {
+        background-color: var(--red);
+    }
+
+
+
+</style>
+
+<!-- ------------------------------------------------------------------------------------------------------------------------ -->
+
+<body>
+    <nav>
+        <h1></h1>
+        <div>
+            <button id="assignCreate">Assign/Create</button>
+            <button id="myInfo">My Info</button>
+        </div>
+    </nav>
+    <div class="mainDisp">
+
+    </div>
+
+</body>
+
+<!-- ------------------------------------------------------------------------------------------------------------------------ -->
+
+<script>
+    const navH1 = document.querySelector('nav h1');
+    const myInfoButton = document.querySelector('#myInfo');
+    document.querySelector('#assignCreate').addEventListener('click', () => {
+        const createAssignDiv = document.querySelector('.createAssign');
+        if (createAssignDiv.style.display === 'grid') {
+            createAssignDiv.style.display = 'none';
+        } else {
+            createAssignDiv.style.display = 'grid';
+        }
+    });
+
+    let memberID = null;
+    let companyID = null
+    // ------------------------GET LEADER DATA AND ASSIGN------------------------
+    async function getLeaderApi() {
+        const response = await fetch('/api/currentUser');
+        const userData = await response.json();
+
+        navH1.textContent = `Hello ${userData.username}`;
+        myInfoButton.addEventListener('click', () => {
+            const editDeleteDiv = document.querySelector('.editDelete');
+            if (editDeleteDiv.style.display === 'none') {
+                editDeleteDiv.style.display = 'block';
+            } else {
+                editDeleteDiv.style.display = 'none';
+            }
+
+            document.querySelector('.editDeleteTitle').textContent = 'My Info';
+            document.querySelector('#username').value = userData.username;
+            document.querySelector('#email').value = userData.email;
+            memberID = userData.user_id;
+
+        });
+
+        
+        const response2 = await fetch('/api/leaderCurrentAllInfo');
+        const userCompanyData = await response2.json();
+        const companyData = {};
+        userCompanyData.forEach(user => {
+            if (!companyData[user.company_name]) {
+                companyData[user.company_name] = { id: user.company_id, peletons: {} };
+            }
+
+            if (!companyData[user.company_name].peletons[user.peleton_name]) {
+                companyData[user.company_name].peletons[user.peleton_name] = { id: user.peleton_id, users: [] };
+            }
+
+            companyData[user.company_name].peletons[user.peleton_name].users.push({ id: user.user_id, username: user.username, email: user.email }); 
+        });
+        console.log(companyData)
+
+
+        for (company in companyData) {
+            companyID = companyData[company].id;
+            const companyDiv = document.createElement('div');
+            companyDiv.classList.add('company');
+            const companyName = document.createElement('h2');
+            companyName.classList.add('companyName');
+            companyName.textContent = company + ` (ID: ${companyData[company].id})`;
+            companyDiv.appendChild(companyName);
+
+            for (let peleton in companyData[company].peletons) {
+                const spacer = document.createElement('div');
+                spacer.classList.add('spacer');
+                companyDiv.appendChild(spacer);
+
+                const peletonDiv = document.createElement('div');
+                peletonDiv.classList.add('peleton');
+                const peletonName = document.createElement('h3');
+                peletonName.classList.add('peletonName');
+                peletonName.textContent = peleton + ` (ID: ${companyData[company].peletons[peleton].id})`;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete Peleton';
+                deleteButton.classList.add('deleteBTN');
+                deleteButton.addEventListener('click', () => {
+                    const peletonId = companyData[company].peletons[peleton].id;
+                    const confirmation = confirm('Are you sure you want to delete this?');
+                    if (confirmation) {
+                        fetch(`/deletePeleton/${peletonId}`, {
+                            method: 'DELETE',
+                        });
+                    }
+                });
+                peletonDiv.appendChild(deleteButton);
+
+                peletonDiv.appendChild(peletonName);
+                const table = document.createElement('table');
+                const thead = document.createElement('thead');
+                const tr = document.createElement('tr');
+                const td1 = document.createElement('td');
+                td1.textContent = 'ID';
+                const td2 = document.createElement('td');
+                td2.textContent = 'Username';
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                thead.appendChild(tr);
+                table.appendChild(thead);
+                const tbody = document.createElement('tbody');
+                for (user of companyData[company].peletons[peleton].users) {
+                    const tr = document.createElement('tr');
+                    tr.addEventListener('click', fillFormInput(user));
+                    const td1 = document.createElement('td');
+                    td1.textContent = user.id;
+                    const td2 = document.createElement('td');
+                    td2.textContent = user.username;
+                    tr.appendChild(td1);
+                    tr.appendChild(td2);
+                    tbody.appendChild(tr);
+                }
+                table.appendChild(tbody);
+                peletonDiv.appendChild(table);
+                companyDiv.appendChild(peletonDiv);
+            }
+            document.querySelector('.mainDisp').appendChild(companyDiv);
+        }
+        createEditDeleteForm();
+        fillTables();
+    }
+    getLeaderApi();
+
+    function fillFormInput(user) {
+        return function(event) {
+            const editDeleteDiv = document.querySelector('.editDelete');
+            if (event.currentTarget.classList.contains('active')) {
+                editDeleteDiv.style.display = 'none';
+                event.currentTarget.classList.remove('active');
+            } else {
+                document.querySelectorAll('tbody > tr.active').forEach(row => row.classList.remove('active'));
+                event.currentTarget.classList.add('active');
+                editDeleteDiv.style.display = 'block';
+                
+                document.querySelector('.editDeleteTitle').textContent = 'User Info';
+                document.querySelector('#username').value = user.username;
+                document.querySelector('#email').value = user.email;
+                memberID = user.id;
+            }
+        };
+    }
+    // ------------------------EDIT/DELETE FORM------------------------
+    function createEditDeleteForm() {
+        const editDeleteDiv = document.createElement('div');
+        editDeleteDiv.style.display = 'none';
+        editDeleteDiv.className = 'editDelete';
+
+        const title = document.createElement('h2');
+        title.className = 'editDeleteTitle';
+        title.textContent = 'User Info';
+        editDeleteDiv.appendChild(title);
+
+        const form = document.createElement('form');
+
+        const usernameDiv = document.createElement('div');
+        const usernameLabel = document.createElement('label');
+        usernameLabel.htmlFor = 'username';
+        usernameLabel.textContent = 'Username:';
+        const usernameInput = document.createElement('input');
+        usernameInput.type = 'text';
+        usernameInput.name = 'username';
+        usernameInput.id = 'username';
+        usernameDiv.appendChild(usernameLabel);
+        usernameDiv.appendChild(usernameInput);
+        form.appendChild(usernameDiv);
+
+        const emailDiv = document.createElement('div');
+        const emailLabel = document.createElement('label');
+        emailLabel.htmlFor = 'email';
+        emailLabel.textContent = 'Email:';
+        const emailInput = document.createElement('input');
+        emailInput.type = 'text';
+        emailInput.name = 'email';
+        emailInput.id = 'email';
+        emailDiv.appendChild(emailLabel);
+        emailDiv.appendChild(emailInput);
+        form.appendChild(emailDiv);
+
+        const editButton = document.createElement('input');
+        editButton.addEventListener('click', async function(event) {
+            event.preventDefault();
+            const memberId = memberID;
+            const username = document.querySelector('#username').value;
+            const email = document.querySelector('#email').value;
+            const response = await fetch(`/leaderEditMember`, {
+                method: 'PUT',
+                body: JSON.stringify({ username, email, memberId }),
+                headers: { 'Content-Type': 'application/json' },
+            });
+            window.location.reload();
+        });
+        editButton.type = 'submit';
+        editButton.name = 'editBTN';
+        editButton.value = 'Edit';
+        form.appendChild(editButton);
+
+        const deleteButton = document.createElement('input');
+        deleteButton.addEventListener('click', async function(event) {
+            event.preventDefault();
+            const memberId = memberID;
+            const response = await fetch(`/leaderDeleteMember`, {
+                method: 'DELETE',
+                body: JSON.stringify({ memberId }),
+                headers: { 'Content-Type': 'application/json' },
+            });
+            window.location.reload();
+        });
+        deleteButton.type = 'submit';
+        deleteButton.name = 'deleteBTN';
+        deleteButton.value = 'Delete';
+        form.appendChild(deleteButton);
+
+        const unassignButton = document.createElement('input');
+        unassignButton.type = 'button';
+        unassignButton.name = 'unassignBTN';
+        unassignButton.value = 'Unassign';
+        unassignButton.addEventListener('click', async (event) => {
+            event.preventDefault();
+            const memberId = memberID;
+            const response = await fetch('/leaderUnassignMember', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ memberId: memberID }),
+            });
+            window.location.reload();
+        });
+        form.appendChild(unassignButton);
+
+        editDeleteDiv.appendChild(form);
+
+        document.querySelector('.mainDisp').appendChild(editDeleteDiv);
+    }
+
+    // ------------------------CREATE PELETON, ASSIGN MEMBER FORM------------------------
+    function createPeletonForm() {
+        const createAssignDiv = document.createElement('div');
+        createAssignDiv.style.display = 'none';
+        createAssignDiv.classList.add('createAssign');
+
+        const addPeletonFormDiv = document.createElement('div');
+        addPeletonFormDiv.classList.add('addPeletonForm');
+        createAssignDiv.appendChild(addPeletonFormDiv);
+
+        const title = document.createElement('h2');
+        title.classList.add('title');
+        title.textContent = 'Create New Peleton';
+        addPeletonFormDiv.appendChild(title);
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/createPeleton';
+        form.classList.add('editForm', 'createPeletonForm');
+        addPeletonFormDiv.appendChild(form);
+
+        const div = document.createElement('div');
+        form.appendChild(div);
+
+        const label = document.createElement('label');
+        label.htmlFor = 'peletonName';
+        label.textContent = 'Peleton Name';
+        div.appendChild(label);
+
+        const br = document.createElement('br');
+        div.appendChild(br);
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'peletonName';
+        input.id = 'peletonName';
+        div.appendChild(input);
+
+        const submit = document.createElement('input');
+        submit.addEventListener('click', async function(event) {
+            event.preventDefault();
+            const peletonName = document.querySelector('#peletonName').value;
+            const companyId = companyID;
+
+            const response = await fetch(`/createPeleton`, {
+                method: 'POST',
+                body: JSON.stringify({ peletonName, companyId }),
+                headers: { 'Content-Type': 'application/json' },
+            });
+            window.location.reload();
+        });
+        submit.type = 'submit';
+        submit.value = 'create';
+        form.appendChild(submit);
+
+        document.querySelector('.mainDisp').appendChild(createAssignDiv);
+        createPeletonMemberTable();
+        createAssignForm();
+    }
+    createPeletonForm();
+
+    function createPeletonMemberTable() {
+        const mainDiv = document.createElement('div');
+
+        const peletonsDiv = document.createElement('div');
+        mainDiv.appendChild(peletonsDiv);
+
+        const peletonsTitle = document.createElement('h2');
+        peletonsTitle.classList.add('title');
+        peletonsTitle.textContent = 'Peletons';
+        peletonsDiv.appendChild(peletonsTitle);
+
+        const peletonsTable = document.createElement('table');
+        peletonsDiv.appendChild(peletonsTable);
+
+        const peletonsThead = document.createElement('thead');
+        peletonsTable.appendChild(peletonsThead);
+
+        const peletonsTr = document.createElement('tr');
+        peletonsThead.appendChild(peletonsTr);
+
+        const peletonsTd1 = document.createElement('td');
+        peletonsTd1.textContent = 'ID';
+        peletonsTr.appendChild(peletonsTd1);
+
+        const peletonsTd2 = document.createElement('td');
+        peletonsTd2.textContent = 'Peleton Name';
+        peletonsTr.appendChild(peletonsTd2);
+
+        const peletonsTbody = document.createElement('tbody');
+        peletonsTbody.classList.add('peletonsTbody');
+        peletonsTable.appendChild(peletonsTbody);
+
+        const freeMembersDiv = document.createElement('div');
+        mainDiv.appendChild(freeMembersDiv);
+
+        const freeMembersTitle = document.createElement('h2');
+        freeMembersTitle.classList.add('title');
+        freeMembersTitle.textContent = 'Free Members';
+        freeMembersDiv.appendChild(freeMembersTitle);
+
+        const freeMembersTable = document.createElement('table');
+        freeMembersDiv.appendChild(freeMembersTable);
+
+        const freeMembersThead = document.createElement('thead');
+        freeMembersTable.appendChild(freeMembersThead);
+
+        const freeMembersTr = document.createElement('tr');
+        freeMembersThead.appendChild(freeMembersTr);
+
+        const freeMembersTd1 = document.createElement('td');
+        freeMembersTd1.textContent = 'ID';
+        freeMembersTr.appendChild(freeMembersTd1);
+
+        const freeMembersTd2 = document.createElement('td');
+        freeMembersTd2.textContent = 'Member Name';
+        freeMembersTr.appendChild(freeMembersTd2);
+
+        const freeMembersTbody = document.createElement('tbody');
+        freeMembersTbody.classList.add('freeMembersTbody');
+        freeMembersTable.appendChild(freeMembersTbody);
+
+        document.querySelector('.createAssign').appendChild(mainDiv);
+    }
+
+    function createAssignForm() {
+        const assignFormDiv = document.createElement('div');
+        assignFormDiv.classList.add('assignForm');
+
+        const assignFormTitle = document.createElement('h2');
+        assignFormTitle.classList.add('title');
+        assignFormTitle.textContent = 'Assign Members';
+        assignFormDiv.appendChild(assignFormTitle);
+
+        const assignForm = document.createElement('form');
+        assignForm.method = 'POST';
+        assignForm.action = '/assignMember';
+        assignForm.classList.add('editForm', 'assingMemberForm');
+        assignFormDiv.appendChild(assignForm);
+
+        const peletonIdDiv = document.createElement('div');
+        assignForm.appendChild(peletonIdDiv);
+
+        const peletonIdLabel = document.createElement('label');
+        peletonIdLabel.htmlFor = 'peletonId';
+        peletonIdLabel.textContent = 'Peleton ID';
+        peletonIdDiv.appendChild(peletonIdLabel);
+
+        const peletonIdInput = document.createElement('input');
+        peletonIdInput.type = 'text';
+        peletonIdInput.name = 'peletonId';
+        peletonIdInput.id = 'peletonId';
+        peletonIdDiv.appendChild(peletonIdInput);
+
+        const memberIdDiv = document.createElement('div');
+        assignForm.appendChild(memberIdDiv);
+
+        const memberIdLabel = document.createElement('label');
+        memberIdLabel.htmlFor = 'memberId';
+        memberIdLabel.textContent = 'Member ID';
+        memberIdDiv.appendChild(memberIdLabel);
+
+        const memberIdInput = document.createElement('input');
+        memberIdInput.type = 'text';
+        memberIdInput.name = 'memberId';
+        memberIdInput.id = 'memberId';
+        memberIdDiv.appendChild(memberIdInput);
+
+        const sourceInput = document.createElement('input');
+        sourceInput.type = 'hidden';
+        sourceInput.name = 'source';
+        sourceInput.value = 'leader';
+        assignForm.appendChild(sourceInput);
+
+        const assignSubmit = document.createElement('input');
+        assignSubmit.type = 'submit';
+        assignSubmit.value = 'assign';
+        assignForm.appendChild(assignSubmit);
+
+        document.querySelector('.createAssign').appendChild(assignFormDiv);
+    }
+    // ------------------------FREE MEMBER, PELETON TABLE------------------------
+    async function fillTables() {
+        const response = await fetch('/api/freeMembers');
+        const freeMembers = await response.json();
+        console.log(freeMembers);
+
+        const tbody = document.querySelector('.freeMembersTbody');
+        for (member of freeMembers) {
+            const tr = document.createElement('tr');
+            const td1 = document.createElement('td');
+            td1.textContent = member.user_id;
+            const td2 = document.createElement('td');
+            td2.textContent = member.username;
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tbody.appendChild(tr);
+        }
+
+        
+        const response2 = await fetch(`/api/leaderCurrentUserAllPeleton/${companyID}`);
+        const peletons = await response2.json();
+
+        const tbody2 = document.querySelector('.peletonsTbody');
+        for (peleton of peletons) {
+            const tr = document.createElement('tr');
+            const td1 = document.createElement('td');
+            td1.textContent = peleton.peleton_id;
+            const td2 = document.createElement('td');
+            td2.textContent = peleton.name;
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tbody2.appendChild(tr);
+        }
+    }
+
+</script>
+
+<!-- ------------------------------------------------------------------------------------------------------------------------ -->
+
+</html>
+

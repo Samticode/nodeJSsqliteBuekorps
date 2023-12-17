@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member</title>
+</head>
+<style>
+    /* ----------------Basic styles--------------------- */
+    * {
+        padding: 0;
+        margin: 0;
+        color: var(--black);
+    }
+
+    :root {
+        --black: #1c1c1c;
+        --brown: #4e4e56;
+        --green: #A0AFA0;
+        --white: #FDFDFD;
+        --beigh: #D9D9D9;
+        --red: #bd8989;
+        --gold: #B9AA8D;
+    }
+
+    body {
+        overflow: hidden;
+    }
+
+    /* ----------------Nav styles--------------------- */
+    nav {
+        width: 100%;
+        height: 15vh;
+        background-color: var(--brown);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    nav > h1 {     
+        color: var(--white);
+        font-size: 5rem;
+        margin-left: 3%;
+    }
+
+    /* ----------------Main styles--------------------- */
+    .mainDisp {
+        width: 100%;
+        height: 85vh;
+        background-color: var(--beigh);
+        display: flex;
+    }
+
+    /* ----------------Peleton table styles--------------------- */
+    .peletonTable {
+        position: relative;
+        overflow-y: scroll;
+        height: 100%;
+        width: 70%;
+        background-color: var(--green);
+    }
+    .companyPeletonTitle {
+        position: fixed;
+        font-size: 4rem;
+        margin: 1% 0%;
+
+        background-color: var(--green);
+        padding: 1% 2%;
+        border-radius: 1vmax;
+    }
+
+    /* ----------------Edit form styles--------------------- */
+    .editForm {
+        width: 30%;
+        height: 100%;
+    }
+
+    .editForm> h2 {
+        font-size: 4rem;
+        margin: 2% 3%;
+        text-align: center;
+    }
+
+    form {
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
+    label {
+        font-size: 2rem;
+    }
+    input {
+        font-size: 2rem;
+    }
+    input[type="submit"] {
+        padding: 2% 3%;
+        border-radius: 1vmax;
+        background-color: var(--green);
+    }
+
+
+    /* ----------------Table styles--------------------- */
+    table {
+        width: 95%;
+        background-color: var(--white);
+        margin: 11% auto 0;
+        border-collapse: collapse;
+    }
+    td {
+        border: 1px solid var(--black);
+        font-size: 3rem;
+    }
+    thead > tr > td {
+        font-weight: bold;
+    }
+    .currentMember:hover {
+        background-color: #cfcfcf;
+    }
+
+
+</style>
+
+<!-- ------------------------------------------------------------------------------------------------------------------------ -->
+
+<body>
+    <nav>
+        <h1></h1>
+    </nav>
+    <div class="mainDisp">
+        <div class="peletonTable">
+            <h2 class="companyPeletonTitle"></h2>
+            <table>
+                <thead><tr>
+                    <td>ID</td>
+                    <td>Username</td>
+                </tr></thead>
+                <tbody class="memberTbody"></tbody>
+            </table>
+        </div>
+        <div class="editForm">
+            <h2>Your Info</h2>
+            <form method="POST" action="/memberEditMember?_method=PUT">
+                <input type="hidden" value="" name="memberId" id="memberId">
+                <div>
+                    <label for="username">Username:</label>
+                    <input type="text" name="username" id="username">
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="text" name="email" id="email">
+                </div>
+                <input type="submit">
+            </form>
+        </div>
+    </div>
+    
+</body>
+
+<!-- ------------------------------------------------------------------------------------------------------------------------ -->
+
+<script>
+    let peletonID = null;
+    let currentMemberID = null;
+    const navH1 = document.querySelector('nav h1');
+
+    window.addEventListener('load', () => {
+        const allInputs = document.querySelectorAll('input[type="text"]');
+        allInputs.forEach((input) => {
+            input.value = "";
+        });
+    })
+
+    async function getCurrentMember() {
+        const response = await fetch('/api/currentUser');
+        const data = await response.json();
+
+        navH1.textContent = `Hello ${data.username}`;
+        peletonID = data.peleton_id;
+
+        const memberTbody = document.querySelector('.memberTbody');
+        const tr = document.createElement('tr');
+        tr.addEventListener('click', () => {
+            currentMemberID = data.user_id;
+            document.querySelector('#memberId').value = data.user_id;
+            document.querySelector('#username').value = data.username;
+            document.querySelector('#email').value = data.email;
+        })
+        tr.classList.add('currentMember');
+        const tdID = document.createElement('td');
+        tdID.textContent = data.user_id;
+        const tdUsername = document.createElement('td');
+        tdUsername.textContent = data.username;
+        tr.appendChild(tdID);
+        tr.appendChild(tdUsername);
+        memberTbody.appendChild(tr);
+
+        document.querySelector('input[type="submit"]').addEventListener('click', () => {
+            window.location.reload();
+        });
+
+        getPeletonData();
+    }
+    getCurrentMember()
+
+    async function getPeletonCompanyName() {
+        const response = await fetch(`/api/memberPeletonCompany`);
+        const data = await response.json();
+
+        document.querySelector('.companyPeletonTitle').textContent = `Company: ${data.company_name}/Peleton: ${data.peleton_name}`;
+    }
+    getPeletonCompanyName()
+
+    async function getPeletonData() {
+        const response = await fetch(`/api/fellowMembers/${peletonID}`);
+        const fellowMembers = await response.json();
+
+        console.log(fellowMembers);
+
+        for (member of fellowMembers) {
+            const memberTbody = document.querySelector('.memberTbody');
+            const tr = document.createElement('tr');
+            const tdID = document.createElement('td');
+            tdID.textContent = member.user_id;
+            const tdUsername = document.createElement('td');
+            tdUsername.textContent = member.username;
+            tr.appendChild(tdID);
+            tr.appendChild(tdUsername);
+            memberTbody.appendChild(tr);
+        }
+    }
+</script>
+</html>

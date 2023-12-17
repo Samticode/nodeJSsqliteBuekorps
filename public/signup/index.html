@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+
+    <div class="leftDiv">
+        <div class="loginForm">
+            <h1>Signup</h1>
+            <form action="/signup" method="post">
+                <div>
+                    <label for="username">Brukernavn:</label>
+                    <br>
+                    <input type="text" name="username" required="">
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <br>
+                    <input type="text" name="email" required="">
+                </div>
+                <div>
+                    <label for="password">Passord:</label>
+                    <br>
+                    <input type="password" name="password" required="">
+                </div>
+                <div>
+                    <label for="role">Rolle:</label>
+                    <br>
+                    <input type="text" name="role" placeholder="leader/member" required="">
+                </div>
+                <br>
+                <br>
+                <button type="submit">Signup</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="rightDiv">
+        <div>
+            <h2>Har du bruker fra før?</h2>
+            <br>
+            <br>
+            <a href="/login">Har du bruker fra før?</a>
+        </div>
+    </div>
+
+</body>
+</html>
